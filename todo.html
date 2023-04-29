@@ -115,21 +115,22 @@
         }
 
         let taskObj = {
-            taskname: task,
-            time: time1
+            time: time1,
+            taskname: task
         };
 
 
         if(localStorage.getItem("data") == null){
-            localStorage.setItem("data","[]");
+            localStorage.setItem("data", "[]");
         }
 
-        var tasklist = JSON.parse(localStorage.getItem("data"));
+        let tasklist = JSON.parse(localStorage.getItem("data"));
         tasklist.push(taskObj);
+        console.log(tasklist);
 
-        localStorage.setItem("data", tasklist);
+        localStorage.setItem("data", JSON.stringify(tasklist));
 
-        console.log(localStorage);
+        // console.log(localStorage);
 
     }
     function update(){
