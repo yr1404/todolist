@@ -8,16 +8,17 @@
     <title>TODO</title>
     <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/87/87912.png?w=740&t=st=1682699998~exp=1682700598~hmac=a27fedb7de4454559877cf79eeb7fda280d8737c03e7be2d06e968b32e90971d">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
 
     <style>
         body {
             background-image: url('https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaGjustify-center90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80');
             background-repeat: no-repeat;
-            background-size: 100%;
+            background-size: cover;
+            background-position: center;
         }
 
-        #parent-div{
+        #p-div{
             background: navajowhite;
             margin: auto;
         }
@@ -25,56 +26,112 @@
 </head>
 
 <body>
-    <div class="parent-div container items-center justify-center">
+    <div class="p-div h-screen flex justify-center items-center">
 
-        <form>
-            <div class="">
-                <label for="InputTasks" class="form-label">Task</label>
-                <input type="text" class="form-control" id="task" required>
-            </div>
-            <div class="">
-                <label for="InputTime" class="form-label">Time</label>
-                <input type="time" class="form-control" id="time">
-                <div id="emailHelp" class="form-text">Format: HH:MM</div>
-            </div>
+        <div class="flex min-h-full h-screen mx-auto flex-col justify-center items-center px-6 py-12 lg:px-8">
+            
+            <form class="space-y-6" action="#" method="POST">
+                <div>
+                  <label for="taskname" class="block text-2xl font-medium leading-6 text-gray-900">Task</label>
+                  <div class="mt-2">
+                    <input id="text" name="taskname" type="text" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-8">
+                  </div>
+                </div>
+          
+                <div>
+                  <div class="flex items-center justify-between">
+                    <label for="time" class="block text-2xl font-medium leading-6 text-gray-900">Time</label>
+                    <div class="text-sm">
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <input id="time" name="time" type="time" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-8">
+                </div>
+                <b class="font-semibold">Format: HH:MM</b>
+                </div>
+          
+                <div class="text-center">
+                  <button type="submit" onclick="getandupdate()" class="justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Add Task</button>
+                  <button type="submit" onclick="deleteall()" class="justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Delete All</button>
+                </div>
+              </form>
 
-            <button type="submit" class="btn btn-primary" onclick="getandupdate()">Add Task</button>
-            <button class="btn btn-primary" onclick="deleteall()">Delete all Tasks</button>
-        </form>
-        <br>
-        <table class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Time</th>
-                    <th scope="col">Task</th>
-                    <th scope="col"></th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr data-bs-toggle="tooltip" data-bs-html="true">
-                    <th scope="row">1</th>
-                    <td>08:00</td>
-                    <td>Eat Breakfast</td>
-                    <td>
-                        <button class="btn btn-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Edit this task" onclick="editthis()">Edit</button>
-                        <button class="btn btn-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Delete this task" onclick="deletethis()">Delete</button>
-                    </td>
-                    <td><button class="btn btn-primary" data-bs-toggle="tooltip" data-bs-html="true" title="Mark as Done" onclick="markdone()">Mark as Done</button></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>      
+
+            <br>
+
+
+            <!-- // -->
+
+
+            <table class="w-full text-base text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-base text-gray-700 uppercase bg-indigo-50 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            #
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Time
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Task
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Mark as Done
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            <span class="sr-only">Edit</span>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="bg-white bg-opacity-75 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-100 dark:hover:bg-gray-600">
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                1
+                        </th>
+                        <td class="px-6 py-4">
+                            10:30
+                        </td>
+                        <td class="px-6 py-4">
+                            Eat Breakfast
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            <input type="checkbox">
+                        </td>
+                        <td class="px-6 py-4 text-right ">
+                            <a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                            <a href="#" onclick="deletethis()" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>      
+    </div>
 </body>
 
 <script>
     function getandupdate() {
         var task = document.getElementById('task').value;
-        var time = document.getElementById('time').value;
-        localStorage.setItem('taskname' ,task);
-        localStorage.setItem('time' ,time);
+        var time = document.getElementById('time').value;\
 
+        if (localStorage.getItem('itemsJson')==null){
+                    itemJsonArray = [];
+                    itemJsonArray.push([task, time]);
+                    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+                }
+                else{
+                    itemJsonArrayStr = localStorage.getItem('itemsJson')
+                    itemJsonArray = JSON.parse(itemJsonArrayStr);
+                    itemJsonArray.push([task, time]);
+                    localStorage.setItem('itemsJson', JSON.stringify(itemJsonArray))
+                }
+                update();
+
+    }
+    function update{
+        
+    }
+    function edit() {
 
     }
     function deletethis(){
