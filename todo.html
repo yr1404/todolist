@@ -136,24 +136,25 @@
                     <tr class="bg-white bg-opacity-75 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-100 dark:hover:bg-gray-600">
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             ${tasklist.indexOf(item) + 1}
-                            </th>
-                            <td class="px-6 py-4">
-                                ${item.time}
-                                </td>
-                                <td class="px-6 py-4">
-                                    ${item.taskname}
-                                    </td>
-                                    <td class="px-6 py-4 text-center">
+                        </th>
+                        <td class="px-6 py-4">
+                            ${item.time}
+                        </td>
+                        <td class="px-6 py-4">
+                            ${item.taskname}
+                        </td>
+                        <td class="px-6 py-4 text-center">
                             <input type="checkbox">
                         </td>
                         <td class="px-6 py-4 text-right ">
                             <a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
                             <a href="#" onclick="deletethis()" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
-                            </td>
-                            </tr>
-                            `;
+                        </td>
+                        
+                    </tr>
+                        `;
             }
-            console.log(html);
+            // console.log(html);
             return html;
         }
 
@@ -165,14 +166,29 @@
                         `;
     }
     function edit() {
-
+        
     }
     function deletethis() {
+        let tasklist = JSON.parse(localStorage.getItem("data"));
 
+        // let row = $(this).parentNode.parentNode;
+        let rowTask = row.childNodes[1];
+
+        console.log(row);
+
+
+        tasklist.splice((rowTask-1),1);
+
+        localStorage.setItem("data", JSON.stringify(tasklist));
+        update();
     }
+
     function deleteall() {
-
+        let tasklist = [];
+        localStorage.setItem("data", JSON.stringify(tasklist));
+        update();
     }
+
     function markdone() {
 
     }
