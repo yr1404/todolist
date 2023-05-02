@@ -190,11 +190,7 @@
         let row = input.parentNode.parentNode;
         let checkBox = row.getElementsByTagName('input')[0];
         
-        console.log(checkBox);
-        checkBox.id = "chk";
-        console.log(checkBox);
-        
-        document.getElementById('chk').checked = true;
+        checkBox.checked = true;
 
         let tasklist = JSON.parse(localStorage.getItem("data"));
         console.log(tasklist);
@@ -229,8 +225,6 @@
 
         localStorage.setItem("data", JSON.stringify(tasklist));
         update();
-
-        checkBox.removeAttribute('id');
     }
 </script>
 
