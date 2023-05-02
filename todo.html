@@ -144,11 +144,11 @@
                             ${item.taskname}
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <input type="checkbox">
+                            <input type="checkbox" onclick="markdone(this)">
                         </td>
                         <td class="px-6 py-4 text-right ">
                             <a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <a href="#" onclick="deletethis()" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                            <a href="#" onclick="deletethis(this)" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
                         </td>
                         
                     </tr>
@@ -161,23 +161,20 @@
 
         document.getElementById('table-data').innerHTML = `
                     <tbody id="table-data">
-                        ${createTable(tasklist)};
+                        ${createTable(tasklist)}
                         </tbody>
                         `;
     }
     function edit() {
         
     }
-    function deletethis() {
+    function deletethis(button) {
         let tasklist = JSON.parse(localStorage.getItem("data"));
 
-        // let row = $(this).parentNode.parentNode;
-        let rowTask = row.childNodes[1];
+        let row = button.parentNode.parentNode;
+        let rowNum = row.getElementsByTagName('th')[0].innerHTML;
 
-        console.log(row);
-
-
-        tasklist.splice((rowTask-1),1);
+        tasklist.splice((rowNum-1),1);
 
         localStorage.setItem("data", JSON.stringify(tasklist));
         update();
@@ -189,8 +186,51 @@
         update();
     }
 
-    function markdone() {
+    function markdone(input) {
+        let row = input.parentNode.parentNode;
+        let checkBox = row.getElementsByTagName('input')[0];
+        
+        console.log(checkBox);
+        checkBox.id = "chk";
+        console.log(checkBox);
+        
+        document.getElementById('chk').checked = true;
 
+        let tasklist = JSON.parse(localStorage.getItem("data"));
+        console.log(tasklist);
+        
+        // console.log(row);
+        let rowNum = row.getElementsByTagName('th')[0].innerHTML;
+
+        let timeDone = row.getElementsByTagName('td')[0].innerHTML;
+        let taskDone = row.getElementsByTagName('td')[1].innerHTML;
+
+        // console.log(timeDone);
+        // console.log(taskDone);
+
+        if(checkBox.checked == true) {
+            timeDone = timeDone.strike();
+            taskDone = taskDone.strike();
+            
+            tasklist[rowNum-1]['time'] = timeDone;
+            tasklist[rowNum-1]['taskname'] = taskDone;
+
+        }
+        else{
+            
+            timeDone = timeDone.replace(/<\/?strike>/gi,'');
+            taskDone = taskDone.replace(/<\/?strike>/gi,'');
+            
+            tasklist[rowNum-1]['time'] = timeDone;
+            tasklist[rowNum-1]['taskname'] = taskDone;
+
+            checkBox.checked = false;
+        }
+
+        localStorage.setItem("data", JSON.stringify(tasklist));
+        update();
+
+        checkBox.removeAttribute('id');
     }
 </script>
 
