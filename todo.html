@@ -144,7 +144,7 @@
                             ${item.taskname}
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <input type="checkbox" onclick="markdone(this)">
+                            <input type="checkbox" data-index="${tasklist.indexOf(item)}">
                         </td>
                         <td class="px-6 py-4 text-right ">
                             <a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
@@ -159,14 +159,18 @@
         }
 
 
-        document.getElementById('table-data').innerHTML = `
-                    <tbody id="table-data">
-                        ${createTable(tasklist)}
-                        </tbody>
-                        `;
+        document.getElementById('table-data').innerHTML = createTable(tasklist);
+
+        // Attach event listeners to the checkboxes
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                markdone(event.target);
+            });
+        });
     }
     function edit() {
-        
+
     }
     function deletethis(button) {
         let tasklist = JSON.parse(localStorage.getItem("data"));
@@ -174,7 +178,7 @@
         let row = button.parentNode.parentNode;
         let rowNum = row.getElementsByTagName('th')[0].innerHTML;
 
-        tasklist.splice((rowNum-1),1);
+        tasklist.splice((rowNum - 1), 1);
 
         localStorage.setItem("data", JSON.stringify(tasklist));
         update();
@@ -186,46 +190,26 @@
         update();
     }
 
-    function markdone(input) {
-        let row = input.parentNode.parentNode;
-        let checkBox = row.getElementsByTagName('input')[0];
-        
-        checkBox.checked = true;
-
+    function markdone(checkbox) {
+        let row = checkbox.parentNode.parentNode;
         let tasklist = JSON.parse(localStorage.getItem("data"));
-        console.log(tasklist);
-        
-        // console.log(row);
         let rowNum = row.getElementsByTagName('th')[0].innerHTML;
+        let timeDone = row.getElementsByTagName('td')[0];
+        let taskDone = row.getElementsByTagName('td')[1];
 
-        let timeDone = row.getElementsByTagName('td')[0].innerHTML;
-        let taskDone = row.getElementsByTagName('td')[1].innerHTML;
-
-        // console.log(timeDone);
-        // console.log(taskDone);
-
-        if(checkBox.checked == true) {
-            timeDone = timeDone.strike();
-            taskDone = taskDone.strike();
+        if (checkbox.checked) {
+            timeDone.innerHTML = "<strike>" + timeDone.innerHTML + "</strike>";
+            taskDone.innerHTML = "<strike>" + taskDone.innerHTML + "</strike>";
             
-            tasklist[rowNum-1]['time'] = timeDone;
-            tasklist[rowNum-1]['taskname'] = taskDone;
-
+            tasklist[rowNum - 1]['done'] = true;
+        } else {
+            timeDone.innerHTML = tasklist[rowNum - 1]['time'];
+            taskDone.innerHTML = tasklist[rowNum - 1]['taskname'];
+            tasklist[rowNum - 1]['done'] = false;
         }
-        else{
-            
-            timeDone = timeDone.replace(/<\/?strike>/gi,'');
-            taskDone = taskDone.replace(/<\/?strike>/gi,'');
-            
-            tasklist[rowNum-1]['time'] = timeDone;
-            tasklist[rowNum-1]['taskname'] = taskDone;
-
-            checkBox.checked = false;
-        }
-
         localStorage.setItem("data", JSON.stringify(tasklist));
-        update();
     }
+
 </script>
 
 </html>
