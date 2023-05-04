@@ -10,13 +10,14 @@
         href="https://cdn-icons-png.flaticon.com/512/87/87912.png?w=740&t=st=1682699998~exp=1682700598~hmac=a27fedb7de4454559877cf79eeb7fda280d8737c03e7be2d06e968b32e90971d">
 
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+    <script src="script.js"></script>
 
     <style>
         body {
             background-image: url('https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaGjustify-center90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80');
             background-repeat: no-repeat;
             background-size: cover;
-            background-position: center;
+            /* background-position: center; */
         }
     </style>
 </head>
@@ -90,126 +91,5 @@
         </div>
     </div>
 </body>
-
-<script>
-    function norefresh(e) {
-        event.preventDefault();
-
-
-        // function getandupdate() {
-        let task = document.getElementById('task').value;
-        let time1 = document.getElementById('time').value;
-
-        // if (task != "") {
-
-        if (time1 == "") {
-            time1 = "All Day";
-        }
-
-        let taskObj = {
-            time: time1,
-            taskname: task
-        };
-
-
-        if (localStorage.getItem("data") == null) {
-            localStorage.setItem("data", "[]");
-        }
-
-        let tasklist = JSON.parse(localStorage.getItem("data"));
-        tasklist.push(taskObj);
-
-        localStorage.setItem("data", JSON.stringify(tasklist));
-
-        update();
-        // }
-        // }
-    }
-
-    function update() {
-        let tasklist = JSON.parse(localStorage.getItem("data"));
-
-        const createTable = tasklist => {
-            let html = "";
-            for (const item of tasklist) {
-                html += `
-                    <tr class="bg-white bg-opacity-75 border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-indigo-100 dark:hover:bg-gray-600">
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            ${tasklist.indexOf(item) + 1}
-                        </th>
-                        <td class="px-6 py-4">
-                            ${item.time}
-                        </td>
-                        <td class="px-6 py-4">
-                            ${item.taskname}
-                        </td>
-                        <td class="px-6 py-4 text-center">
-                            <input type="checkbox" data-index="${tasklist.indexOf(item)}">
-                        </td>
-                        <td class="px-6 py-4 text-right ">
-                            <a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            <a href="#" onclick="deletethis(this)" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
-                        </td>
-                        
-                    </tr>
-                        `;
-            }
-            // console.log(html);
-            return html;
-        }
-
-
-        document.getElementById('table-data').innerHTML = createTable(tasklist);
-
-        // Attach event listeners to the checkboxes
-        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.addEventListener('change', (event) => {
-                markdone(event.target);
-            });
-        });
-    }
-    function edit() {
-
-    }
-    function deletethis(button) {
-        let tasklist = JSON.parse(localStorage.getItem("data"));
-
-        let row = button.parentNode.parentNode;
-        let rowNum = row.getElementsByTagName('th')[0].innerHTML;
-
-        tasklist.splice((rowNum - 1), 1);
-
-        localStorage.setItem("data", JSON.stringify(tasklist));
-        update();
-    }
-
-    function deleteall() {
-        let tasklist = [];
-        localStorage.setItem("data", JSON.stringify(tasklist));
-        update();
-    }
-
-    function markdone(checkbox) {
-        let row = checkbox.parentNode.parentNode;
-        let tasklist = JSON.parse(localStorage.getItem("data"));
-        let rowNum = row.getElementsByTagName('th')[0].innerHTML;
-        let timeDone = row.getElementsByTagName('td')[0];
-        let taskDone = row.getElementsByTagName('td')[1];
-
-        if (checkbox.checked) {
-            timeDone.innerHTML = "<strike>" + timeDone.innerHTML + "</strike>";
-            taskDone.innerHTML = "<strike>" + taskDone.innerHTML + "</strike>";
-            
-            tasklist[rowNum - 1]['done'] = true;
-        } else {
-            timeDone.innerHTML = tasklist[rowNum - 1]['time'];
-            taskDone.innerHTML = tasklist[rowNum - 1]['taskname'];
-            tasklist[rowNum - 1]['done'] = false;
-        }
-        localStorage.setItem("data", JSON.stringify(tasklist));
-    }
-
-</script>
 
 </html>
