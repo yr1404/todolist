@@ -10,14 +10,13 @@
         href="https://cdn-icons-png.flaticon.com/512/87/87912.png?w=740&t=st=1682699998~exp=1682700598~hmac=a27fedb7de4454559877cf79eeb7fda280d8737c03e7be2d06e968b32e90971d">
 
     <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-    <script src="script.js"></script>
+    <script defer src="script.js"></script>
 
     <style>
         body {
             background-image: url('https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaGjustify-center90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80');
             background-repeat: no-repeat;
             background-size: cover;
-            /* background-position: center; */
         }
     </style>
 </head>
@@ -25,13 +24,16 @@
 <body>
     <div class="p-div h-screen flex justify-center items-center">
 
-        <div class="flex min-h-full h-screen mx-auto flex-col justify-center items-center px-6 py-12 lg:px-8">
+        <div class="flex mx-auto flex-col justify-center items-center px-6 py-12 lg:px-8 rounded bg-black bg-opacity-20 backdrop-blur-sm">
 
-            <form onsubmit="norefresh()" class="w-full space-y-6" action="#" method="POST">
+            <form class="w-full space-y-6" action="" data-new-task-form>
                 <div>
-                    <label for="taskname" class="block text-2xl font-medium leading-6 text-gray-900">Task</label>
+                    <label class="block text-2xl font-medium leading-6 text-gray-900">Task</label>
                     <div class="mt-2">
-                        <input id="task" name="taskname" type="text" required
+                        <input type="text" required
+                            placeholder="type new task"
+                            data-new-task-name
+
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-10">
                     </div>
                 </div>
@@ -44,6 +46,7 @@
                     </div>
                     <div class="mt-2">
                         <input id="time" name="time" type="time"
+                            data-new-task-time
                             class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-lg sm:leading-10">
                     </div>
                     <b class="font-semibold text-gray-700">Format: <span class="text-gray-900">HH:MM</span></b>
@@ -72,21 +75,22 @@
                         <th scope="col" class="px-6 py-3">
                             #
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 w-24 text-center">
                             Time
                         </th>
-                        <th scope="col" class="px-6 py-3">
+                        <th scope="col" class="px-6 py-3 w-60">
                             Task
                         </th>
                         <th scope="col" class="px-6 py-3">
                             Mark as Done
                         </th>
-                        <th scope="col" class="px-6 py-3">
-                            <span class="sr-only">Edit</span>
+                        <th scope="col" class="px-6 py-3 w-44">
                         </th>
                     </tr>
                 </thead>
-                <tbody id="table-data"></tbody>
+                <tbody table-data >
+
+                </tbody>
             </table>
         </div>
     </div>
