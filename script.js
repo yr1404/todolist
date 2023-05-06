@@ -4,21 +4,44 @@ const newTaskForm = document.querySelector('[data-new-task-form')
 const newTaskName = document.querySelector('[data-new-task-name')
 const newTaskTime = document.querySelector('[data-new-task-time')
 
-let taskList = [
-    {
-        time: 'time1',
-        taskname: 'task'
-    },
-    {
-        time: 'time1',
-        taskname: 'task'
-    }]
+const LOCAL_STORAGE_DATA_KEY = "task.data"
 
-    newTaskForm.addEventListener('submit', e => {
-        e.preventDefault()
-        
+let taskList = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA_KEY)) || []
 
-    })
+
+
+newTaskForm.addEventListener('submit', e => {
+    e.preventDefault()
+
+    const taskName = newTaskName.value
+    let taskTime = newTaskTime.value
+
+    if (taskName == null || taskName === '') return
+    if (taskTime == null || taskTime === '') taskTime = 'All Day'
+
+    const taskObj = createTaskObj(taskName, taskTime)
+
+    newTaskName.value = null
+    newTaskTime.value = null
+
+    taskList.push(taskObj)
+    saveAndUpdate()
+})
+
+function createTaskObj(taskName, taskTime) {
+    return { time: taskTime, taskname: taskName }
+}
+
+
+function saveAndUpdate() {
+    save();
+    clearAndUpdate();
+}
+
+function save() {
+    localStorage.setItem(LOCAL_STORAGE_DATA_KEY, JSON.stringify(taskList))
+}
+
 
 function clearAndUpdate() {
     clearData(taskTable)
@@ -32,16 +55,16 @@ function clearAndUpdate() {
         const taskName = document.createElement('td')
         const checkBox = document.createElement('td')
         const taskButtons = document.createElement('td')
-        taskRow.dataset.rowId = task.id
 
+        taskNum.classList.add("text-black")
         taskName.classList.add("px-6", "py-3", "text-left")
 
-        taskNum.innerText = taskList.indexOf(task)+1
-        taskTime.innerText = task.time
-        taskName.innerText = task.taskname
-        checkBox.innerHTML = `<input type="checkbox" data-index="${taskNum}">`
+        taskNum.innerText = taskList.indexOf(task) + 1
+        taskTime.innerHTML = task.time
+        taskName.innerHTML = task.taskname
+        checkBox.innerHTML = `<input type="checkbox" data-index="${taskList.indexOf(task)}">`
         taskButtons.innerHTML = `<a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-        <a href="#" onclick="deletethis(this)" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>`
+        <a href="#" onclick="deleteThis(this)" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>`
 
         taskRow.append(taskNum, taskTime, taskName, checkBox, taskButtons)
 
@@ -52,9 +75,47 @@ function clearAndUpdate() {
 }
 
 function clearData(element) {
-    while(element.firstChild) {
+    while (element.firstChild) {
         element.removeChild(element.firstChild)
     }
 }
 
 clearAndUpdate()
+
+function deleteAll() {
+    taskList = []
+    saveAndUpdate()
+}
+
+function deleteThis(button) {
+    let row = button.parentNode.parentNode;
+    let rowNum = row.getElementsByTagName('td')[0].innerText;
+
+    taskList.splice((rowNum - 1), 1);
+
+    saveAndUpdate()
+}
+
+var checkboxes = document.querySelectorAll('input[type = checkbox]');
+
+
+checkboxes.forEach(chkbox => {
+
+    chkbox.addEventListener("click", () => {
+
+        let timeDone = document.getElementsByTagName('td')[1].innerHTML;
+        let taskDone = document.getElementsByTagName('td')[2].innerHTML;
+        let taskNum = chkbox.getAttribute("data-index");
+
+        console.log(taskNum);
+
+        if (chkbox.checked) {
+            taskList[taskNum]['time'] = "<s>" + timeDone + "</s>";
+            taskList[taskNum]['taskname'] = "<s>" + taskDone + "</s>";
+        } else {
+            taskList[taskNum]['time'] = timeDone;
+            taskList[taskNum]['task'] = taskDone;
+        }
+        saveAndUpdate();
+    });
+})
