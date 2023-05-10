@@ -57,6 +57,7 @@ function clearAndUpdate() {
         const taskButtons = document.createElement('td')
 
         taskNum.classList.add("text-black")
+        taskTime.classList.add("text-gray-600")
         taskName.classList.add("px-6", "py-3", "text-left")
 
         taskNum.innerText = taskList.indexOf(task) + 1
@@ -96,26 +97,17 @@ function deleteThis(button) {
     saveAndUpdate()
 }
 
-var checkboxes = document.querySelectorAll('input[type = checkbox]');
 
+//markdone section // 
 
-checkboxes.forEach(chkbox => {
+taskTable.addEventListener("click", function(e){
+    if(e.target.tagName === "INPUT"){
+        const chkbox = e.target
+        let timeDone = chkbox.parentNode.parentNode.getElementsByTagName("td")[1]
+        let taskDone = chkbox.parentNode.parentNode.getElementsByTagName("td")[2]
 
-    chkbox.addEventListener("click", () => {
+        timeDone.classList.toggle("checked");
+        taskDone.classList.toggle("checked");
+    }
 
-        let timeDone = document.getElementsByTagName('td')[1].innerHTML;
-        let taskDone = document.getElementsByTagName('td')[2].innerHTML;
-        let taskNum = chkbox.getAttribute("data-index");
-
-        console.log(taskNum);
-
-        if (chkbox.checked) {
-            taskList[taskNum]['time'] = "<s>" + timeDone + "</s>";
-            taskList[taskNum]['taskname'] = "<s>" + taskDone + "</s>";
-        } else {
-            taskList[taskNum]['time'] = timeDone;
-            taskList[taskNum]['task'] = taskDone;
-        }
-        saveAndUpdate();
-    });
 })
