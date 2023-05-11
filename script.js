@@ -1,12 +1,14 @@
 const taskTable = document.querySelector('[table-data]')
 
-const newTaskForm = document.querySelector('[data-new-task-form')
-const newTaskName = document.querySelector('[data-new-task-name')
-const newTaskTime = document.querySelector('[data-new-task-time')
+const newTaskForm = document.querySelector('[data-new-task-form]')
+const newTaskName = document.querySelector('[data-new-task-name]')
+const newTaskTime = document.querySelector('[data-new-task-time]')
 
 const LOCAL_STORAGE_DATA_KEY = "task.data"
 
 let taskList = JSON.parse(localStorage.getItem(LOCAL_STORAGE_DATA_KEY)) || []
+
+let checkValue = JSON.parse(localStorage.getItem("checkbox_value")) || []
 
 
 
@@ -53,24 +55,30 @@ function clearAndUpdate() {
         const taskNum = document.createElement('td')
         const taskTime = document.createElement('td')
         const taskName = document.createElement('td')
-        const checkBox = document.createElement('td')
         const taskButtons = document.createElement('td')
+
+        const checkBox = document.createElement('input')
+        checkBox.setAttribute("type", "checkbox")
+        checkBox.checked = checkValue[taskList.indexOf(task)]
+        if (checkBox.checked == true) {
+            taskTime.classList.add("checked")
+            taskName.classList.add("checked")
+        }
 
         taskNum.classList.add("text-black")
         taskTime.classList.add("text-gray-600")
-        taskName.classList.add("px-6", "py-3", "text-left")
+        taskName.classList.add("py-3","px-3", "text-left")
+        checkBox.classList.add("my-4")
 
         taskNum.innerText = taskList.indexOf(task) + 1
         taskTime.innerHTML = task.time
         taskName.innerHTML = task.taskname
-        checkBox.innerHTML = `<input type="checkbox" data-index="${taskList.indexOf(task)}">`
-        taskButtons.innerHTML = `<a href="#" onclick="edit()" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+        taskButtons.innerHTML = `<a href="#" onclick="edit(this)" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
         <a href="#" onclick="deleteThis(this)" class="pl-10 font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>`
 
         taskRow.append(taskNum, taskTime, taskName, checkBox, taskButtons)
 
         taskTable.appendChild(taskRow)
-
 
     })
 }
@@ -98,16 +106,60 @@ function deleteThis(button) {
 }
 
 
-//markdone section // 
+// Store checkvalue in localStorage...
 
-taskTable.addEventListener("click", function(e){
-    if(e.target.tagName === "INPUT"){
-        const chkbox = e.target
-        let timeDone = chkbox.parentNode.parentNode.getElementsByTagName("td")[1]
-        let taskDone = chkbox.parentNode.parentNode.getElementsByTagName("td")[2]
+const checkboxes = taskTable.querySelectorAll("input[type=checkbox]")
+checkboxes.forEach(chkbox => {
+    chkbox.addEventListener("click", () => {
+
+        let timeDone = chkbox.parentNode.getElementsByTagName("td")[1]
+        let taskDone = chkbox.parentNode.getElementsByTagName("td")[2]
 
         timeDone.classList.toggle("checked");
         taskDone.classList.toggle("checked");
-    }
+
+        checkValue = []
+
+        checkboxes.forEach(cbox => {
+
+            checkValue.push(cbox.checked);
+
+        })
+
+        localStorage.setItem('checkbox_value', JSON.stringify(checkValue))
+
+    })
 
 })
+
+//edit button
+function edit(button){
+    let editTask = button.parentNode.parentNode.getElementsByTagName('td')[2]
+    let editTime = button.parentNode.parentNode.getElementsByTagName('td')[1]
+    const taskNum = button.parentNode.parentNode.getElementsByTagName('td')[0].innerText
+
+    if(button.innerText == "Edit"){
+        button.classList.toggle("edit-save")
+        button.style.color = "white"
+        
+        button.innerText = "Save"
+        
+        
+        editTask.contentEditable = true
+        editTime.contentEditable = true
+        editTask.style.backgroundColor = "white"
+        editTime.style.backgroundColor = "white"
+        
+        
+    }
+    else if(button.innerText == "Save"){
+        button.innerText = "Edit"
+        button.classList.toggle("edit-save")
+        button.style.color = "#2563EB"
+        
+        editTask.contentEditable = false
+        editTime.contentEditable = false
+        editTask.style.backgroundColor = ""
+        editTime.style.backgroundColor = ""
+    }
+}
