@@ -1,4 +1,5 @@
 const taskTable = document.querySelector('[table-data]')
+const checkboxes = taskTable.querySelectorAll("input[type=checkbox]")
 
 const newTaskForm = document.querySelector('[data-new-task-form]')
 const newTaskName = document.querySelector('[data-new-task-name]')
@@ -67,7 +68,7 @@ function clearAndUpdate() {
 
         taskNum.classList.add("text-black")
         taskTime.classList.add("text-gray-600")
-        taskName.classList.add("py-3","px-3", "text-left")
+        taskName.classList.add("my-3","mx-11", "text-left")
         checkBox.classList.add("my-4")
 
         taskNum.innerText = taskList.indexOf(task) + 1
@@ -101,17 +102,17 @@ function deleteThis(button) {
     let rowNum = row.getElementsByTagName('td')[0].innerText;
 
     taskList.splice((rowNum - 1), 1);
+    checkValue.splice((rowNum - 1), 1);
 
     saveAndUpdate()
 }
 
 
-// Store checkvalue in localStorage...
+// Markdone and Store checkvalue in localStorage...
 
-const checkboxes = taskTable.querySelectorAll("input[type=checkbox]")
 checkboxes.forEach(chkbox => {
     chkbox.addEventListener("click", () => {
-
+        
         let timeDone = chkbox.parentNode.getElementsByTagName("td")[1]
         let taskDone = chkbox.parentNode.getElementsByTagName("td")[2]
 
@@ -126,8 +127,9 @@ checkboxes.forEach(chkbox => {
 
         })
 
+        console.log(checkValue)
+        
         localStorage.setItem('checkbox_value', JSON.stringify(checkValue))
-
     })
 
 })
@@ -136,7 +138,7 @@ checkboxes.forEach(chkbox => {
 function edit(button){
     let editTask = button.parentNode.parentNode.getElementsByTagName('td')[2]
     let editTime = button.parentNode.parentNode.getElementsByTagName('td')[1]
-    const taskNum = button.parentNode.parentNode.getElementsByTagName('td')[0].innerText
+    const taskNum = button.parentNode.parentNode.getElementsByTagName('td')[0].innerText - 1
 
     if(button.innerText == "Edit"){
         button.classList.toggle("edit-save")
@@ -153,6 +155,8 @@ function edit(button){
         
     }
     else if(button.innerText == "Save"){
+
+        
         button.innerText = "Edit"
         button.classList.toggle("edit-save")
         button.style.color = "#2563EB"
@@ -161,5 +165,11 @@ function edit(button){
         editTime.contentEditable = false
         editTask.style.backgroundColor = ""
         editTime.style.backgroundColor = ""
+
+        taskList[taskNum].time = editTime.innerText
+        taskList[taskNum].taskname = editTask.innerText
+        save()
+        clearAndUpdate()
     }
+
 }
