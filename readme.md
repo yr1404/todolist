@@ -36,4 +36,4 @@ cd todo-list
 - Tailwind CSS
 - JavaScript
   
-Try it at: https://yr1404.github.io/todolist/index.html
+Try the Todolist at: https://yr1404.github.io/todolist/index.html
