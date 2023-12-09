@@ -9,7 +9,7 @@ This TodoList website is a simple application that allows users to manage their 
 - Delete all tasks
 - Edit tasks already added to the todo list
 
-## Installation
+## Local Setup
 
 1. Clone the repository:
 
